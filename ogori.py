@@ -5,6 +5,11 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
 BASE_URL = 'http://ogori-masu.appspot.com'
+
+class Recording(db.Model):
+    """Captures the Twilio POST sent when recording completes."""
+    pass
+
 class MainPage(webapp.RequestHandler):
     """Plays a message if one exists, then <Record>s a new one."""
     def get(self):
