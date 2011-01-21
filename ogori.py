@@ -12,7 +12,7 @@ class Recording(db.Model):
 
 class MainPage(webapp.RequestHandler):
     """Plays a message if one exists, then <Record>s a new one."""
-    def get(self):
+    def post(self):
         self.response.out.write(
                 '<?xml version="1.0" encoding="UTF-8"?><Response>')
         rec = Recording.get_next()
