@@ -8,7 +8,9 @@ BASE_URL = 'http://ogori-masu.appspot.com'
 
 class Recording(db.Model):
     """Captures the Twilio POST sent when recording completes."""
-    pass
+    @staticmethod
+    def get_next():
+        return None
 
 class MainPage(webapp.RequestHandler):
     """Plays a message if one exists, then <Record>s a new one."""
