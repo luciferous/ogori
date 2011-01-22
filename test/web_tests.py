@@ -44,3 +44,17 @@ class PlayTest(unittest.TestCase):
         self.assertEqual('123', rec.call_sid)
         self.assertEqual('321', rec.caller)
         self.assertEqual('http://example.com/play/me.mp3', rec.url)
+
+    def test_no_recording(self):
+        conf = webapp.WSGIApplication([('/', ogori.MainPage)], debug=True)
+        app = TestApp(conf)
+        response = app.post('/', 'format=json')
+
+        import json
+        result = json.loads(response.body)
+        self.assertEquals(None, result['recording'])
+        self.assertEquals(
+                'http://ogori-masu.appspot.com/record',
+                result['action']
+                )
+

@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+import os
 from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
+from google.appengine.ext.webapp import template
 
 BASE_URL = 'http://ogori-masu.appspot.com'
 
@@ -32,16 +34,17 @@ class Recording(db.Model):
 class MainPage(webapp.RequestHandler):
     """Plays a message if one exists, then <Record>s a new one."""
     def post(self):
-        self.response.out.write(
-                '<?xml version="1.0" encoding="UTF-8"?><Response>')
-        rec = Recording.get_next()
-        if rec is not None:
-            self.response.out.write('<Play>%s</Play>' % rec.url)
-        url = BASE_URL + '/record'
-        self.response.out.write('''\
-                <Record action="%s"/>
-                </Response>''' % url
-                )
+        template_values = {
+                'recording': Recording.get_next(),
+                'action': BASE_URL + '/record'
+                }
+
+        if self.request.get('format') == 'json':
+            import json
+            self.response.out.write(json.dumps(template_values))
+        else:
+            path = os.path.join(os.path.dirname(__file__), 'response.xml')
+            self.response.out.write(template.render(path, template_values))
 
 class RecordPage(webapp.RequestHandler):
     """Saves the URL of the recorded message."""
