@@ -13,7 +13,7 @@ class Recording(db.Model):
     caller = db.StringProperty(required=True)
     url = db.StringProperty(required=True)
     date = db.DateTimeProperty(auto_now_add=True)
-    played = db.BooleanProperty()
+    played = db.BooleanProperty(default=False)
 
     @staticmethod
     def get_next():
@@ -22,7 +22,7 @@ class Recording(db.Model):
 
         recording = query.get()
 
-        if recording not None:
+        if recording is not None:
             recording.played = True
             recording.put()
             return recording
@@ -46,9 +46,9 @@ class MainPage(webapp.RequestHandler):
 class RecordPage(webapp.RequestHandler):
     """Saves the URL of the recorded message."""
     def post(self):
-        call_sid = self.request.post('CallSid')
-        caller = self.request.post('From')
-        url = self.request.post('RecordingUrl')
+        call_sid = self.request.get('CallSid')
+        caller = self.request.get('From')
+        url = self.request.get('RecordingUrl')
 
         Recording(call_sid=call_sid, caller=caller, url=url).put()
 
