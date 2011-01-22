@@ -44,6 +44,7 @@ class MainPage(webapp.RequestHandler):
             self.response.out.write(json.dumps(template_values))
         else:
             path = os.path.join(os.path.dirname(__file__), 'response.xml')
+            self.response.headers['Content-Type'] = 'text/xml'
             self.response.out.write(template.render(path, template_values))
 
 class RecordPage(webapp.RequestHandler):
